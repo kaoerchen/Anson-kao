@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增花費</title>
+</head>
+<body>
+    <h1>新增花費</h1>
+    <form action="{{ url_for('add_expense') }}" method="POST">
+        <label for="date">日期：</label>
+        <input type="date" id="date" name="date" required><br>
+        <label for="item">項目：</label>
+        <input type="text" id="item" name="item" required><br>
+        <label for="amount">金額：</label>
+        <input type="number" id="amount" name="amount" required><br>
+        <button type="submit">新增</button>
+    </form>
+    <a href="{{ url_for('index') }}">返回</a>
+</body>
+</html>

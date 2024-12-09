@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花費紀錄</title>
+</head>
+<body>
+    <h1>花費紀錄</h1>
+    <a href="{{ url_for('add_expense') }}">新增花費</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>項目</th>
+                <th>金額</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.item }}</td>
+                <td>{{ expense.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
