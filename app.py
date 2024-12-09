@@ -1,7 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+import secrets  # 用於生成安全密鑰
 
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16)  # 設置隨機生成的安全密鑰
 
 # 設定 SQLite 資料庫
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
@@ -27,6 +29,32 @@ class Expense(db.Model):
 # 初始化資料庫
 with app.app_context():
     db.create_all()
+
+# 路由：顯示花費紀錄
+@app.route('/')
+def index():
+    expenses = Expense.query.all()
+    return render_template('index.html', expenses=expenses)
+
+# 路由：顯示新增花費頁面
+@app.route('/add_expense', methods=['GET', 'POST'])
+def add_expense():
+    if request.method == 'POST':
+        # 從表單獲取資料
+        date = request.form['date']
+        item = request.form['item']
+        amount = request.form['amount']
+        try:
+            # 新增到資料庫
+            new_expense = Expense(date=date, item=item, amount=float(amount))
+            db.session.add(new_expense)
+            db.session.commit()
+            flash('花費已成功新增！', 'success')
+            return redirect(url_for('index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'發生錯誤：{str(e)}', 'danger')
+    return render_template('add_expense.html')
 
 # 1. Create: 新增花費紀錄
 @app.route('/api/expenses', methods=['POST'])
